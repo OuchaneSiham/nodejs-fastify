@@ -1,4 +1,5 @@
 const path = require("path");
+const auth = require("./midllewares/auth")
 require('dotenv').config({ path: path.join(__dirname, '../.env') });
 const mongoose = require('mongoose');
 console.log('__dirname:', __dirname);
@@ -12,6 +13,11 @@ mongoose.connect(process.env.DB_URL)
         
 fastify.register(userRoutes, {prefix: "/api/v1/users"});
 fastify.register(projectRoutes, {prefix: "/api/v1/projects"});
+
+// fastify.addHook("preHandler", auth); we will remove it from her 
+// and go the function th?e route that we want to 
+// apply the auth on it ?
+// watch the routes files 
 
 const start = async() => 
 {
