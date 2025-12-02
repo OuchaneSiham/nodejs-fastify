@@ -12,7 +12,7 @@
 
 
 // we can chekc the methodss 
-async function auth(request, reply) {
+async function apikeyAuth(request, reply) {
 // for the get and head methodsa we can just skip return we wont applyu the key
     if(['GET', 'HEAD'].includes(request.method))
         return;// if we request with get it will skip
@@ -23,7 +23,16 @@ async function auth(request, reply) {
         return reply.status(401).send({error: "unauthorized acc"});
     }
 }
+async function basicAuth(request, reply) {
 
-module.exports = auth;
+    // console.log(:i was called);
+    const authHeader = request.headers['authorization'];
+    if(!authHeader)
+    {
+        reply.status(401).send({error: "no auth header"});
+    }
+}
+
+module.exports = {apikeyAuth, basicAuth};
 // i have two ways to invoke it manually or using hook in a lifestyle on nodejs 
 // 230 270 3892578211032200 89

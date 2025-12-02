@@ -7,6 +7,10 @@ const fastify = require('fastify')({ logger: true });
 const userRoutes = require("./routes/user.routes");
 const projectRoutes = require("./routes/project.routes");
 // console.log(process.env.DB_URL);
+
+const {basicAuth} = require("./midllewares/auth");
+
+
 mongoose.connect(process.env.DB_URL)
         .then(() => console.log("connected to database"))
         .catch(error => console.log("error", error));
@@ -18,7 +22,7 @@ fastify.register(projectRoutes, {prefix: "/api/v1/projects"});
 // and go the function th?e route that we want to 
 // apply the auth on it ?
 // watch the routes files 
-
+fastify.addHook('preHandler', basicAuth);
 const start = async() => 
 {
     try{
