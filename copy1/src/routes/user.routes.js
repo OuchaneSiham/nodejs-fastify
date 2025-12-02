@@ -1,7 +1,7 @@
 //lets map the routes to our controllers
 const userController =  require("../controllers/user.controller.js");
 
-const auth = require("../midllewares/auth");
+const auth = require("../midllewares/auth.js");
 async function routes(fastify, options)
 {
     fastify.get("/", userController.getAllUsers);

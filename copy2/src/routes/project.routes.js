@@ -1,0 +1,14 @@
+const projectController =  require("../controllers/project.controller.js");
+
+
+async function routes(fastify, options)
+{
+    fastify.get("/", projectController.getAllProjects);
+    fastify.get("/:id", projectController.getProjectById);
+    fastify.post("/", projectController.createProject);
+    fastify.put("/:id", projectController.updateProject);
+    fastify.delete("/:id", projectController.deleteProject);
+
+
+}
+module.exports = routes;
