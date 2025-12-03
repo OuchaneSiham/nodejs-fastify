@@ -1,7 +1,8 @@
 const userRoutes = require("../routes/user.routes");
-
+const  jwt = require("jsonwebtoken");
 
 const User = require("../models/user.model");
+const auth = require("../midllewares/auth")
 async function getAllUsers(request, reply) 
 {
     try{
@@ -62,6 +63,36 @@ async function deleteUser(request, reply)
         reply.status(500).send(error);
     }
 }
+
+async function jwbsLogin(request, reply) 
+{
+    const {email, password} = request.body;
+    try{
+        const user = await User.findOne({email}).select(["password", "_id", "lastName", "firstName"]);
+        if(!user)
+            {
+                reply.status(401).send({error: "this user isnt in the db !"});
+            }
+            const isMatch = await user.comparePassword(password);
+            if(isMatch == false)
+                {
+                    reply.status(401).send({error: "wrong password try again!"});
+                }
+                // return isMatch;
+                if(isMatch)
+                    {
+                        // console.log("aaaaaaaaaaaaaaaaaaaaaaaaa", process.env.JWT_KEY);
+                        const token = jwt.sign({firstName: user.firstName, lastName: user.lastName, email, userId: user._id}, process.env.JWT_KEY, 
+                            {expiresIn:"24h"});
+            reply.send({token: token});
+        }
+    }
+    catch(error)
+    {
+        return reply.status(500).send({error: " error while login"});
+    }
+}
 module.exports = {
-    deleteUser, updateUser, createUser, getAllUsers, getUserById
+    deleteUser, updateUser, createUser, getAllUsers, getUserById,
+    jwbsLogin
 }

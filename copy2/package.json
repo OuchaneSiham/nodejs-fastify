@@ -1,11 +1,4 @@
 {
-
-  "scripts": {
-
-    "dev": "nodemon app.js"
-
-  },
-
   "dependencies": {
 
     "@fastify/jwt": "^10.0.0",
@@ -17,6 +10,8 @@
     "fastify": "^5.6.2",
 
     "init": "^0.1.2",
+
+    "jsonwebtoken": "^9.0.2",
 
     "mongoose": "^9.0.0",
 

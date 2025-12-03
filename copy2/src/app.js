@@ -7,7 +7,7 @@ const fastify = require('fastify')({ logger: true });
 const userRoutes = require("./routes/user.routes");
 const projectRoutes = require("./routes/project.routes");
 
-const {basicAuth} = require("./midllewares/auth");
+const {jwtAuth} = require("./midllewares/auth");
 
 
 mongoose.connect(process.env.DB_URL)
@@ -16,13 +16,13 @@ mongoose.connect(process.env.DB_URL)
         
 fastify.register(userRoutes, {prefix: "/api/v1/users"});
 fastify.register(projectRoutes, {prefix: "/api/v1/projects"});
-// fastify.addHook('preHandler', basicAuth);
-fastify.addHook('preHandler', async (request, reply) => {
-    if (request.method === 'POST' && request.url === '/api/v1/users') {
-        return;
-    }
-    await basicAuth(request, reply);
-});
+// fastify.addHook('preHandler', jwtAuth);
+// fastify.addHook('preHandler', async (request, reply) => {
+//     if (request.method === 'POST' && request.url === '/api/v1/users') {
+//         return;
+//     }
+//     await basicAuth(request, reply);
+// });
 
 const start = async() => 
 {
