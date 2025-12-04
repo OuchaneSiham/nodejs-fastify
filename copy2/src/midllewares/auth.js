@@ -2,6 +2,7 @@
 
 const User = require("../models/user.model");
 const userRoutes = require("../routes/user.routes");
+const  jwt = require("jsonwebtoken");
 
 async function apikeyAuth(request, reply) {
     if(['GET', 'HEAD'].includes(request.method))
@@ -60,21 +61,32 @@ async function basicAuth(request, reply) {
 }
 async function jwtAuth(request, reply) 
 {
-    const authHeader = request.headers['authorization'];
-    if(!authHeader)
-        {
-            reply.status(401).send({error: "no auth header"});
-        }
-        const [authType, authKey] = authHeader.split(" ");
-        if(authType !== 'Bearer')
+    try
+    {
+
+        const authHeader = request.headers['authorization'];
+        if(!authHeader)
             {
-                return reply.status(401).send({error: " requires bearer auth"});
+                reply.status(401).send({error: "no auth header2"});
             }
-            console.log("siham aaaaaaaaaaa:::: key", authKey);
-            console.log("siham aaaaaaaaaaa:::: type", authType);
-            
+            const [authType, authKey] = authHeader.split(" ");
+            if(authType !== 'Bearer')
+                {
+                    return reply.status(401).send({error: " requires bearer auth"});
+                }
+                // console.log("siham aaaaaaaaaaa:::: key", authKey);
+                // console.log("siham aaaaaaaaaaa:::: type", authType);
+            request.user = jwt.verify(authKey, process.env.JWT_KEY);
+            // reply.send(verfiy);
+            console.log("infos", request.user);
+    }
+    catch(error)
+    {
+        reply.status(401).send({error: "not match"});
+    }
+    // console.log("siham mmmmmmmmmmmmmm");
             
 }
-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaXJzdE5hbWUiOiJzaWhhbTUiLCJsYXN0TmFtZSI6Im91Y2hhbmU1IiwiZW1haWwiOiJzaWhhbTVAZXhhbXBsZS5jb20iLCJ1c2VySWQiOiI2OTMwMDkxYTNhNjBmMDIwYmJhMGJkMWMiLCJpYXQiOjE3NjQ3NTk0MzksImV4cCI6MTc2NDg0NTgzOX0.Ye_emxfCfhiJYWrcCzHDqMZifu7sNPxLugcU3L1_cv4"
+// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaXJzdE5hbWUiOiJzaWhhbTUiLCJsYXN0TmFtZSI6Im91Y2hhbmU1IiwiZW1haWwiOiJzaWhhbTVAZXhhbXBsZS5jb20iLCJ1c2VySWQiOiI2OTMwMDkxYTNhNjBmMDIwYmJhMGJkMWMiLCJpYXQiOjE3NjQ3NTk0MzksImV4cCI6MTc2NDg0NTgzOX0.Ye_emxfCfhiJYWrcCzHDqMZifu7sNPxLugcU3L1_cv4"
 
 module.exports = {apikeyAuth, basicAuth, jwtAuth};
